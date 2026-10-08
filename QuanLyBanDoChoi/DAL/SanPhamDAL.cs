@@ -146,21 +146,66 @@ namespace QuanLyBanDoChoi.DAL
 
             using (SqlConnection conn = Database.GetConnection())
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaSP", sp.MaSP.Trim());
-                cmd.Parameters.AddWithValue("@MaLoai", string.IsNullOrEmpty(sp.MaLoai) ? (object)DBNull.Value : sp.MaLoai.Trim());
-                cmd.Parameters.AddWithValue("@TenSP", sp.TenSP.Trim());
-                cmd.Parameters.AddWithValue("@DoTuoi", string.IsNullOrEmpty(sp.DoTuoi) ? (object)DBNull.Value : sp.DoTuoi.Trim());
-                cmd.Parameters.AddWithValue("@TenXuatXu", string.IsNullOrEmpty(sp.TenXuatXu) ? (object)DBNull.Value : sp.TenXuatXu.Trim());
-                cmd.Parameters.AddWithValue("@Hang", string.IsNullOrEmpty(sp.Hang) ? (object)DBNull.Value : sp.Hang.Trim());
-                cmd.Parameters.AddWithValue("@GiaNhap", sp.GiaNhap);
-                cmd.Parameters.AddWithValue("@DonGia", sp.DonGia);
-                cmd.Parameters.AddWithValue("@TonKho", sp.TonKho);
-                cmd.Parameters.AddWithValue("@HinhAnh", string.IsNullOrEmpty(sp.HinhAnh) ? (object)DBNull.Value : sp.HinhAnh.Trim());
-                cmd.Parameters.AddWithValue("@TrangThai", sp.TrangThai ? 1 : 0);
-
                 conn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                using (SqlTransaction tran = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        SqlCommand cmd = new SqlCommand(query, conn, tran);
+                        cmd.Parameters.AddWithValue("@MaSP", sp.MaSP.Trim());
+                        cmd.Parameters.AddWithValue("@MaLoai", string.IsNullOrEmpty(sp.MaLoai) ? (object)DBNull.Value : sp.MaLoai.Trim());
+                        cmd.Parameters.AddWithValue("@TenSP", sp.TenSP.Trim());
+                        cmd.Parameters.AddWithValue("@DoTuoi", string.IsNullOrEmpty(sp.DoTuoi) ? (object)DBNull.Value : sp.DoTuoi.Trim());
+                        cmd.Parameters.AddWithValue("@TenXuatXu", string.IsNullOrEmpty(sp.TenXuatXu) ? (object)DBNull.Value : sp.TenXuatXu.Trim());
+                        cmd.Parameters.AddWithValue("@Hang", string.IsNullOrEmpty(sp.Hang) ? (object)DBNull.Value : sp.Hang.Trim());
+                        cmd.Parameters.AddWithValue("@GiaNhap", sp.GiaNhap);
+                        cmd.Parameters.AddWithValue("@DonGia", sp.DonGia);
+                        cmd.Parameters.AddWithValue("@TonKho", sp.TonKho);
+                        cmd.Parameters.AddWithValue("@HinhAnh", string.IsNullOrEmpty(sp.HinhAnh) ? (object)DBNull.Value : sp.HinhAnh.Trim());
+                        cmd.Parameters.AddWithValue("@TrangThai", sp.TrangThai ? 1 : 0);
+
+                        int inserted = cmd.ExecuteNonQuery();
+
+                        // Nếu có thông tin kênh bán (DanhSachKenhBan), đồng bộ vào bảng liên kết SanPham_NenTang
+                        if (inserted > 0 && !string.IsNullOrWhiteSpace(sp.DanhSachKenhBan))
+                        {
+                            // DanhSachKenhBan lưu dạng "Tên nền tảng[, Tên nền tảng]..."
+                            string[] parts = sp.DanhSachKenhBan.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                            foreach (var raw in parts)
+                            {
+                                string tenNenTang = raw.Trim();
+                                if (string.IsNullOrEmpty(tenNenTang)) continue;
+
+                                // Tìm MaNenTang tương ứng theo TenNenTang
+                                string sel = "SELECT MaNenTang FROM NenTang WHERE TenNenTang = @TenNenTang";
+                                using (SqlCommand cmdSel = new SqlCommand(sel, conn, tran))
+                                {
+                                    cmdSel.Parameters.AddWithValue("@TenNenTang", tenNenTang);
+                                    object ma = cmdSel.ExecuteScalar();
+                                    if (ma != null && ma != DBNull.Value)
+                                    {
+                                        string maNenTang = ma.ToString().Trim();
+                                        string ins = "INSERT INTO SanPham_NenTang (MaSP, MaNenTang) VALUES (@MaSP, @MaNenTang)";
+                                        using (SqlCommand cmdIns = new SqlCommand(ins, conn, tran))
+                                        {
+                                            cmdIns.Parameters.AddWithValue("@MaSP", sp.MaSP.Trim());
+                                            cmdIns.Parameters.AddWithValue("@MaNenTang", maNenTang);
+                                            try { cmdIns.ExecuteNonQuery(); } catch { /* Ignore if duplicate key */ }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        tran.Commit();
+                        return inserted > 0;
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                        throw;
+                    }
+                }
             }
         }
 
@@ -184,21 +229,74 @@ namespace QuanLyBanDoChoi.DAL
 
             using (SqlConnection conn = Database.GetConnection())
             {
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaSP", sp.MaSP.Trim());
-                cmd.Parameters.AddWithValue("@MaLoai", string.IsNullOrEmpty(sp.MaLoai) ? (object)DBNull.Value : sp.MaLoai.Trim());
-                cmd.Parameters.AddWithValue("@TenSP", sp.TenSP.Trim());
-                cmd.Parameters.AddWithValue("@DoTuoi", string.IsNullOrEmpty(sp.DoTuoi) ? (object)DBNull.Value : sp.DoTuoi.Trim());
-                cmd.Parameters.AddWithValue("@TenXuatXu", string.IsNullOrEmpty(sp.TenXuatXu) ? (object)DBNull.Value : sp.TenXuatXu.Trim());
-                cmd.Parameters.AddWithValue("@Hang", string.IsNullOrEmpty(sp.Hang) ? (object)DBNull.Value : sp.Hang.Trim());
-                cmd.Parameters.AddWithValue("@GiaNhap", sp.GiaNhap);
-                cmd.Parameters.AddWithValue("@DonGia", sp.DonGia);
-                cmd.Parameters.AddWithValue("@TonKho", sp.TonKho);
-                cmd.Parameters.AddWithValue("@HinhAnh", string.IsNullOrEmpty(sp.HinhAnh) ? (object)DBNull.Value : sp.HinhAnh.Trim());
-                cmd.Parameters.AddWithValue("@TrangThai", sp.TrangThai ? 1 : 0);
-
                 conn.Open();
-                return cmd.ExecuteNonQuery() > 0;
+                using (SqlTransaction tran = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        SqlCommand cmd = new SqlCommand(query, conn, tran);
+                        cmd.Parameters.AddWithValue("@MaSP", sp.MaSP.Trim());
+                        cmd.Parameters.AddWithValue("@MaLoai", string.IsNullOrEmpty(sp.MaLoai) ? (object)DBNull.Value : sp.MaLoai.Trim());
+                        cmd.Parameters.AddWithValue("@TenSP", sp.TenSP.Trim());
+                        cmd.Parameters.AddWithValue("@DoTuoi", string.IsNullOrEmpty(sp.DoTuoi) ? (object)DBNull.Value : sp.DoTuoi.Trim());
+                        cmd.Parameters.AddWithValue("@TenXuatXu", string.IsNullOrEmpty(sp.TenXuatXu) ? (object)DBNull.Value : sp.TenXuatXu.Trim());
+                        cmd.Parameters.AddWithValue("@Hang", string.IsNullOrEmpty(sp.Hang) ? (object)DBNull.Value : sp.Hang.Trim());
+                        cmd.Parameters.AddWithValue("@GiaNhap", sp.GiaNhap);
+                        cmd.Parameters.AddWithValue("@DonGia", sp.DonGia);
+                        cmd.Parameters.AddWithValue("@TonKho", sp.TonKho);
+                        cmd.Parameters.AddWithValue("@HinhAnh", string.IsNullOrEmpty(sp.HinhAnh) ? (object)DBNull.Value : sp.HinhAnh.Trim());
+                        cmd.Parameters.AddWithValue("@TrangThai", sp.TrangThai ? 1 : 0);
+
+                        int updated = cmd.ExecuteNonQuery();
+
+                        // Cập nhật lại bảng liên kết SanPham_NenTang: xóa cũ, thêm mới
+                        if (updated > 0)
+                        {
+                            string del = "DELETE FROM SanPham_NenTang WHERE MaSP = @MaSP";
+                            using (SqlCommand cmdDel = new SqlCommand(del, conn, tran))
+                            {
+                                cmdDel.Parameters.AddWithValue("@MaSP", sp.MaSP.Trim());
+                                cmdDel.ExecuteNonQuery();
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(sp.DanhSachKenhBan))
+                            {
+                                string[] parts = sp.DanhSachKenhBan.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                foreach (var raw in parts)
+                                {
+                                    string tenNenTang = raw.Trim();
+                                    if (string.IsNullOrEmpty(tenNenTang)) continue;
+
+                                    string sel = "SELECT MaNenTang FROM NenTang WHERE TenNenTang = @TenNenTang";
+                                    using (SqlCommand cmdSel = new SqlCommand(sel, conn, tran))
+                                    {
+                                        cmdSel.Parameters.AddWithValue("@TenNenTang", tenNenTang);
+                                        object ma = cmdSel.ExecuteScalar();
+                                        if (ma != null && ma != DBNull.Value)
+                                        {
+                                            string maNenTang = ma.ToString().Trim();
+                                            string ins = "INSERT INTO SanPham_NenTang (MaSP, MaNenTang) VALUES (@MaSP, @MaNenTang)";
+                                            using (SqlCommand cmdIns = new SqlCommand(ins, conn, tran))
+                                            {
+                                                cmdIns.Parameters.AddWithValue("@MaSP", sp.MaSP.Trim());
+                                                cmdIns.Parameters.AddWithValue("@MaNenTang", maNenTang);
+                                                try { cmdIns.ExecuteNonQuery(); } catch { }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        tran.Commit();
+                        return updated > 0;
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                        throw;
+                    }
+                }
             }
         }
 

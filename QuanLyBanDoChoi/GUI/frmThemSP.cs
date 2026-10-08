@@ -130,10 +130,20 @@ namespace QuanLyBanDoChoi.GUI
                 // Điền Kênh bán cũ vào cboKenhBan
                 if (cboKenhBan != null)
                 {
-                    string kenhCu = _sanPhamCanSua.DanhSachKenhBan ?? _sanPhamCanSua.DanhSachKenhBan ?? "";
+                    string kenhCu = _sanPhamCanSua.DanhSachKenhBan ?? "";
                     if (!string.IsNullOrEmpty(kenhCu))
                     {
-                        cboKenhBan.Text = kenhCu;
+                        // Tìm index của item khớp với giá trị cũ
+                        int index = cboKenhBan.Items.IndexOf(kenhCu);
+                        if (index >= 0)
+                        {
+                            cboKenhBan.SelectedIndex = index;
+                        }
+                        else
+                        {
+                            // Nếu không tìm thấy, đặt về index 0
+                            cboKenhBan.SelectedIndex = 0;
+                        }
                     }
                 }
 
@@ -354,7 +364,9 @@ namespace QuanLyBanDoChoi.GUI
                 bool trangThai = radDangKinhDoanh.Checked;
 
                 // Lấy giá trị Kênh bán hàng từ ComboBox
-                string kenhBan = cboKenhBan != null ? cboKenhBan.Text.Trim() : "Tại quầy";
+                string kenhBan = cboKenhBan != null && cboKenhBan.SelectedItem != null ? 
+                    cboKenhBan.SelectedItem.ToString().Trim() : "Tại quầy";
+
 
                 // Đóng gói đối tượng SanPhamDTO
                 SanPhamDTO sp = new SanPhamDTO

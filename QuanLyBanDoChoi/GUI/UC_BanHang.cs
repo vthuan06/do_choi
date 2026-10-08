@@ -22,8 +22,47 @@ namespace QuanLyBanDoChoi.GUI
         {
             InitializeComponent();
         }
+
+        // Normalize fonts for this control and child controls to fix inconsistent font issues
+        private void NormalizeFonts()
+        {
+            Font appFont = new Font("Times New Roman", 10F, FontStyle.Regular);
+            this.Font = appFont;
+            ApplyFontRecursive(this, appFont);
+        }
+
+        private void ApplyFontRecursive(Control parent, Font font)
+        {
+            if (parent == null) return;
+
+            foreach (Control c in parent.Controls)
+            {
+                try
+                {
+                    c.Font = font;
+                }
+                catch { }
+
+                if (c is DataGridView dgv)
+                {
+                    try
+                    {
+                        dgv.DefaultCellStyle.Font = font;
+                        dgv.ColumnHeadersDefaultCellStyle.Font = new Font(font.FontFamily, font.Size, FontStyle.Bold);
+                    }
+                    catch { }
+                }
+
+                // recurse
+                if (c.HasChildren)
+                    ApplyFontRecursive(c, font);
+            }
+        }
         private void UC_BanHang_Load(object sender, EventArgs e)
         {
+            // Ensure consistent font across controls
+            NormalizeFonts();
+
             rdTTTM.FlatStyle = FlatStyle.Flat;
             rdTTCK.FlatStyle = FlatStyle.Flat;
             cbbHinhThuc.SelectedItem = "_Tất cả_";

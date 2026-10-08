@@ -29,17 +29,15 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UC_BanHang));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageHoaDon = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.cboDoTuoi = new System.Windows.Forms.ComboBox();
             this.cboXuatXu = new System.Windows.Forms.ComboBox();
             this.txtTimKiem = new System.Windows.Forms.TextBox();
@@ -105,6 +103,7 @@
             this.label10 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtTimLSGD = new System.Windows.Forms.TextBox();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPageHoaDon.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -165,9 +164,8 @@
             // panel6
             // 
             this.panel6.BackColor = System.Drawing.Color.GhostWhite;
+            this.panel6.Controls.Add(this.comboBox1);
             this.panel6.Controls.Add(this.label7);
-            this.panel6.Controls.Add(this.radioButton2);
-            this.panel6.Controls.Add(this.radioButton1);
             this.panel6.Controls.Add(this.cboDoTuoi);
             this.panel6.Controls.Add(this.cboXuatXu);
             this.panel6.Controls.Add(this.txtTimKiem);
@@ -189,32 +187,6 @@
             this.label7.Size = new System.Drawing.Size(87, 19);
             this.label7.TabIndex = 16;
             this.label7.Text = "Mua hàng:";
-            // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton2.Location = new System.Drawing.Point(769, 9);
-            this.radioButton2.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(71, 21);
-            this.radioButton2.TabIndex = 15;
-            this.radioButton2.Text = "Online";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
-            // radioButton1
-            // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Checked = true;
-            this.radioButton1.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radioButton1.Location = new System.Drawing.Point(663, 9);
-            this.radioButton1.Margin = new System.Windows.Forms.Padding(4);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(87, 21);
-            this.radioButton1.TabIndex = 14;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Tại Quầy";
-            this.radioButton1.UseVisualStyleBackColor = true;
             // 
             // cboDoTuoi
             // 
@@ -307,14 +279,14 @@
             // dgvThongTinDoChoi
             // 
             this.dgvThongTinDoChoi.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.Honeydew;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvThongTinDoChoi.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.Honeydew;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvThongTinDoChoi.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvThongTinDoChoi.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvThongTinDoChoi.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colSTT,
@@ -325,13 +297,16 @@
             this.colXuatXu,
             this.colTonKho,
             this.colDoTuoi});
+            this.dgvThongTinDoChoi.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvThongTinDoChoi.EnableHeadersVisualStyles = false;
-            this.dgvThongTinDoChoi.Location = new System.Drawing.Point(3, 116);
+            this.dgvThongTinDoChoi.Location = new System.Drawing.Point(0, 116);
             this.dgvThongTinDoChoi.Margin = new System.Windows.Forms.Padding(4);
             this.dgvThongTinDoChoi.Name = "dgvThongTinDoChoi";
             this.dgvThongTinDoChoi.RowHeadersVisible = false;
             this.dgvThongTinDoChoi.RowHeadersWidth = 51;
-            this.dgvThongTinDoChoi.Size = new System.Drawing.Size(948, 562);
+            this.dgvThongTinDoChoi.Size = new System.Drawing.Size(971, 572);
             this.dgvThongTinDoChoi.TabIndex = 7;
             this.dgvThongTinDoChoi.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvThongTinDoChoi_CellContentClick);
             // 
@@ -674,7 +649,7 @@
             this.lblNenTang.Name = "lblNenTang";
             this.lblNenTang.Size = new System.Drawing.Size(82, 18);
             this.lblNenTang.TabIndex = 0;
-            this.lblNenTang.Text = "lblNenTang";
+            this.lblNenTang.Text = "Nền tảng";
             // 
             // lblThongTinKH
             // 
@@ -685,7 +660,7 @@
             this.lblThongTinKH.Name = "lblThongTinKH";
             this.lblThongTinKH.Size = new System.Drawing.Size(105, 18);
             this.lblThongTinKH.TabIndex = 0;
-            this.lblThongTinKH.Text = "lblThongTinKH";
+            this.lblThongTinKH.Text = "Thông tin khách hàng";
             // 
             // pnlEmptyCart
             // 
@@ -706,7 +681,7 @@
             this.lblEmpty.Name = "lblEmpty";
             this.lblEmpty.Size = new System.Drawing.Size(59, 16);
             this.lblEmpty.TabIndex = 1;
-            this.lblEmpty.Text = "lblEmpty";
+            this.lblEmpty.Text = "Giỏ hàng trống";
             // 
             // picCart
             // 
@@ -751,14 +726,14 @@
             // dataGridView1
             // 
             this.dataGridView1.BackgroundColor = System.Drawing.SystemColors.ButtonHighlight;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.LightYellow;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.LightYellow;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView1.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column9,
@@ -1030,6 +1005,19 @@
             this.txtTimLSGD.TabIndex = 6;
             this.txtTimLSGD.Text = "🔍 Tìm tên khách hàng, sđt, mã hóa đơn...";
             // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Tại quầy",
+            "shopee",
+            "lazada",
+            "tiktok shop"});
+            this.comboBox1.Location = new System.Drawing.Point(650, 9);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(192, 25);
+            this.comboBox1.TabIndex = 17;
+            // 
             // UC_BanHang
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1102,8 +1090,6 @@
         private System.Windows.Forms.TextBox txtTimLSGD;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.ComboBox cboDoTuoi;
         private System.Windows.Forms.ComboBox cboXuatXu;
         private System.Windows.Forms.TextBox txtTimKiem;
@@ -1138,5 +1124,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colXuatXu;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTonKho;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDoTuoi;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
